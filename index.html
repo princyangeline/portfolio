@@ -250,6 +250,56 @@
             font-size: 0.95rem;
         }
 
+        /* Resume Selector Dropdown */
+        .resume-selector {
+            margin-bottom: 1.5rem;
+        }
+
+        .resume-selector label {
+            display: block;
+            color: var(--text-gray);
+            font-size: 0.9rem;
+            margin-bottom: 0.8rem;
+            font-weight: 600;
+        }
+
+        .resume-dropdown {
+            width: 100%;
+            padding: 1rem;
+            background: var(--bg-dark);
+            border: 2px solid var(--border);
+            border-radius: 10px;
+            color: var(--text-white);
+            font-family: 'Plus Jakarta Sans', sans-serif;
+            font-size: 1rem;
+            font-weight: 500;
+            cursor: pointer;
+            transition: all 0.3s;
+            appearance: none;
+            background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='24' height='24' viewBox='0 0 24 24' fill='none' stroke='%23cbd5e1' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpolyline points='6 9 12 15 18 9'%3E%3C/polyline%3E%3C/svg%3E");
+            background-repeat: no-repeat;
+            background-position: right 1rem center;
+            background-size: 20px;
+            padding-right: 3rem;
+        }
+
+        .resume-dropdown:hover {
+            border-color: var(--primary);
+            background-color: var(--bg-darker);
+        }
+
+        .resume-dropdown:focus {
+            outline: none;
+            border-color: var(--primary);
+            box-shadow: 0 0 0 3px rgba(99, 102, 241, 0.1);
+        }
+
+        .resume-dropdown option {
+            background: var(--bg-dark);
+            color: var(--text-white);
+            padding: 1rem;
+        }
+
         .download-btn {
             width: 100%;
             justify-content: center;
@@ -824,7 +874,17 @@
                             <div class="download-icon">📄</div>
                             <h3>Download My Resume</h3>
                             <p>Get a detailed overview of my experience, skills, and qualifications</p>
-                            <a href="#" class="btn btn-primary download-btn" onclick="alert('Please upload your resume PDF and update this link!'); return false;">
+                            
+                            <!-- Resume Selector Dropdown -->
+                            <div class="resume-selector">
+                                <label for="resumeType">Select Resume Type:</label>
+                                <select id="resumeType" class="resume-dropdown">
+                                    <option value="ai">AI & Development Resume</option>
+                                    <option value="claims">Insurance & Claims Resume</option>
+                                </select>
+                            </div>
+
+                            <a href="#" id="downloadBtn" class="btn btn-primary download-btn">
                                 Download Resume
                                 <span>↓</span>
                             </a>
@@ -1127,7 +1187,40 @@
         </div>
     </footer>
 
-    <script data-cfasync="false" src="/cdn-cgi/scripts/5c5dd728/cloudflare-static/email-decode.min.js"></script><script>
+    <script>
+        // Resume Download Functionality
+        const resumeLinks = {
+            'ai': 'Resume_AI_Princy_Angeline.pdf',
+            'claims': 'Resume_Claims_Princy_Angeline.pdf'
+        };
+
+        const downloadBtn = document.getElementById('downloadBtn');
+        const resumeDropdown = document.getElementById('resumeType');
+
+        // Update download button when dropdown changes
+        resumeDropdown.addEventListener('change', function() {
+            const selectedType = this.value;
+            downloadBtn.href = resumeLinks[selectedType];
+        });
+
+        // Set initial download link
+        downloadBtn.href = resumeLinks['ai'];
+
+        // Download button click handler
+        downloadBtn.addEventListener('click', function(e) {
+            e.preventDefault();
+            const selectedType = resumeDropdown.value;
+            const resumeUrl = resumeLinks[selectedType];
+            
+            // Create a temporary link and trigger download
+            const link = document.createElement('a');
+            link.href = resumeUrl;
+            link.download = resumeUrl;
+            document.body.appendChild(link);
+            link.click();
+            document.body.removeChild(link);
+        });
+
         // Smooth scroll
         document.querySelectorAll('a[href^="#"]').forEach(anchor => {
             anchor.addEventListener('click', function (e) {
@@ -1187,4 +1280,13 @@
                 navLinksContainer.style.flexDirection = 'column';
                 navLinksContainer.style.position = 'absolute';
                 navLinksContainer.style.top = '100%';
-                n
+                navLinksContainer.style.left = '0';
+                navLinksContainer.style.right = '0';
+                navLinksContainer.style.background = 'var(--bg-darker)';
+                navLinksContainer.style.padding = '2rem';
+                navLinksContainer.style.borderBottom = '1px solid var(--border)';
+            }
+        });
+    </script>
+</body>
+</html>
